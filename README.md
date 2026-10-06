@@ -4,12 +4,12 @@ Fine-tune a small open model so that its tool calls are well-formed and correct,
 improvement honestly: on tools the model never saw in training, against both a raw baseline and a
 well-prompted baseline, with confidence intervals.
 
-## Goal (target, not a result)
+## Goal (Multiple iterations)
 
 | | Valid-call rate on held-out tools |
 |---|---|
-| Baseline (assumed before running) | about 71% |
-| Fine-tuned (target) | about 94% |
+| Baseline (current) | about 71% |
+| Fine-tuned (target) | about 90% |
 
 These two numbers are the goal I set before running anything. They live in
 `configs/default.yaml` under `targets`, and `make report` prints measured results next to them and
