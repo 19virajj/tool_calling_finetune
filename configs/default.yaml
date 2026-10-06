@@ -1,0 +1,46 @@
+# Single config for data prep, training and evaluation.
+seed: 3407
+
+data:
+  dataset: Salesforce/xlam-function-calling-60k   # gated on Hugging Face: accept the terms and log in first
+  out_dir: data/processed
+  test_tool_pct: 10          # percent of tool names reserved for the held-out eval (never seen in training)
+  max_train: 8000            # call examples in the training set
+  max_eval: 800              # call examples in the eval set
+  abstain_train_frac: 0.08   # extra "no tool fits" training examples, as a fraction of max_train
+  abstain_eval: 200          # "no tool fits" eval examples
+
+model:
+  name: Qwen/Qwen2.5-3B-Instruct
+  max_seq_length: 2048
+  load_in_4bit: true         # QLoRA
+
+lora:
+  r: 16
+  alpha: 16
+  dropout: 0.0
+  target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+train:
+  output_dir: outputs/qwen25-3b-toolcall
+  per_device_batch_size: 2
+  grad_accum_steps: 8
+  epochs: 1
+  max_steps: -1              # set a small number (e.g. 30) for a smoke test
+  learning_rate: 2.0e-4
+  warmup_steps: 20
+  weight_decay: 0.01
+  lr_scheduler: linear
+  optim: adamw_8bit
+  logging_steps: 10
+
+eval:
+  batch_size: 8
+  max_new_tokens: 256
+  results_dir: results
+
+# Goals written down BEFORE running anything. They are targets, not measurements.
+# make_report.py compares measured results against them.
+targets:
+  baseline_valid_call_rate: 0.71
+  tuned_valid_call_rate: 0.94

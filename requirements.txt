@@ -1,0 +1,11 @@
+# Install torch for your CUDA setup first (https://pytorch.org). On Colab it is preinstalled.
+unsloth
+trl
+transformers
+peft
+accelerate
+bitsandbytes
+datasets
+pyyaml
+matplotlib
+pytest
